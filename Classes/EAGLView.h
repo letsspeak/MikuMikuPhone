@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-#import "ESRenderer.h"
+#import "ES2Renderer.h"
 
 // This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 // The view content is basically an EAGL surface you render your OpenGL scene into.
@@ -17,7 +17,7 @@
 @interface EAGLView : UIView
 {    
 @private
-    id <ESRenderer> renderer;
+    ES2Renderer *renderer;
 
     BOOL animating;
     BOOL displayLinkSupported;
@@ -35,7 +35,7 @@
 @property (nonatomic, retain) id displayLink;
 @property (nonatomic, assign) NSTimer *animationTimer;
 
-@property (readonly, nonatomic, assign) id <ESRenderer> renderer;
+@property (readonly, nonatomic, assign) ES2Renderer *renderer;
 
 - (void)startAnimation;
 - (void)stopAnimation;

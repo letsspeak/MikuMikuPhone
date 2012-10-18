@@ -294,6 +294,7 @@ bool pmdRenderer::init( pmdReader* reader, vmdReader* motion )
 		NSString* strFShaders[NUM_SHADERS] = { @"ShaderPlain", @"ShaderPlainTex", @"ShaderPlainSkin",  @"ShaderPlainTex" };
 		for( int32_t i = 0; i < NUM_SHADERS; ++i )
 		{
+      NSLog(@"loading sharders %d", i);
 			loadShaders(&_shaders[ i ], strVShaders[ i ], strFShaders[ i ] );
 #if defined(DEBUG)
 			if (!validateProgram(_shaders[ i ]._program))
@@ -656,7 +657,7 @@ int16_t pmdRenderer::getMappedBone( std::vector< int32_t >*pVec, const int32_t i
 	}
 
 	if( iIndex == -1 )
-		NSLog( @"Bone Index not found! %d" );
+		NSLog( @"Bone Index not found!");
 
 	return iIndex;
 }
@@ -1056,7 +1057,7 @@ bool pmdRenderer::partitionMeshes( pmdReader* reader )
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	
-	NSLog( @"Duplicated vertices:%d", _vecMappedVertex.size() - reader->getNumVertices() );
+	NSLog( @"Duplicated vertices:%ld", _vecMappedVertex.size() - reader->getNumVertices() );
     	
 	_vecMappedVertex.clear();
 	_mapVertexMapping.clear();
@@ -1110,6 +1111,7 @@ BOOL pmdRenderer::compileShader( GLuint *shader, const GLenum type, const NSStri
 
 BOOL pmdRenderer::linkProgram( const GLuint prog )
 {
+  NSLog(@"pmdRenderer::linkProgram");
     GLint status;
 	
     glLinkProgram(prog);
@@ -1157,67 +1159,67 @@ BOOL pmdRenderer::validateProgram(const GLuint prog )
 BOOL pmdRenderer::loadShaders( SHADER_PARAMS* params, NSString* strVsh, NSString* strFsh )
 {
 	GLuint program;
-    GLuint vertShader, fragShader;
-    NSString *vertShaderPathname, *fragShaderPathname;
+  GLuint vertShader, fragShader;
+  NSString *vertShaderPathname, *fragShaderPathname;
 	
-    // Create shader program
-    program = glCreateProgram();
+  // Create shader program
+  program = glCreateProgram();
 	
-    // Create and compile vertex shader
-    vertShaderPathname = [[NSBundle mainBundle] pathForResource:strVsh ofType:@"vsh"];
-    if (!compileShader( &vertShader, GL_VERTEX_SHADER, vertShaderPathname ))
-    {
-        NSLog(@"Failed to compile vertex shader");
-        return FALSE;
-    }
+  // Create and compile vertex shader
+  vertShaderPathname = [[NSBundle mainBundle] pathForResource:strVsh ofType:@"vsh"];
+  if (!compileShader( &vertShader, GL_VERTEX_SHADER, vertShaderPathname ))
+  {
+    NSLog(@"Failed to compile vertex shader");
+    return FALSE;
+  }
 	
-    // Create and compile fragment shader
-    fragShaderPathname = [[NSBundle mainBundle] pathForResource:strFsh ofType:@"fsh"];
-    if (!compileShader( &fragShader, GL_FRAGMENT_SHADER, fragShaderPathname ))
-    {
-        NSLog(@"Failed to compile fragment shader");
-        return FALSE;
-    }
+  // Create and compile fragment shader
+  fragShaderPathname = [[NSBundle mainBundle] pathForResource:strFsh ofType:@"fsh"];
+  if (!compileShader( &fragShader, GL_FRAGMENT_SHADER, fragShaderPathname ))
+  {
+    NSLog(@"Failed to compile fragment shader");
+    return FALSE;
+  }
 	
-    // Attach vertex shader to program
-    glAttachShader(program, vertShader);
-
-    // Attach fragment shader to program
-    glAttachShader(program, fragShader);
+  // Attach vertex shader to program
+  glAttachShader(program, vertShader);
+  
+  // Attach fragment shader to program
+  glAttachShader(program, fragShader);
 	
-    // Bind attribute locations
-    // this needs to be done prior to linking
-    glBindAttribLocation(program, ATTRIB_VERTEX, "myVertex");
-    glBindAttribLocation(program, ATTRIB_NORMAL, "myNormal");
-    glBindAttribLocation(program, ATTRIB_UV, "myUV");
-    glBindAttribLocation(program, ATTRIB_BONE, "myBone");
-    glBindAttribLocation(program, ATTRIB_SKINANIMATION, "mySkinAnimation");
-
+  // Bind attribute locations
+  // this needs to be done prior to linking
+  glBindAttribLocation(program, ATTRIB_VERTEX, "myVertex");
+  glBindAttribLocation(program, ATTRIB_NORMAL, "myNormal");
+  glBindAttribLocation(program, ATTRIB_UV, "myUV");
+  glBindAttribLocation(program, ATTRIB_BONE, "myBone");
+  glBindAttribLocation(program, ATTRIB_SKINANIMATION, "mySkinAnimation");
+  
 	// Link program
-    if( !linkProgram(program) )
-    {
-        NSLog(@"Failed to link program: %d", program);
+  if( !linkProgram(program) )
+  {
+    NSLog(@"Failed to link program: %d", program);
 		
-        if (vertShader)
-        {
-            glDeleteShader(vertShader);
-            vertShader = 0;
-        }
-        if (fragShader)
-        {
-            glDeleteShader(fragShader);
-            fragShader = 0;
-        }
-        if (program)
-        {
-            glDeleteProgram(program);
-            params->_program = 0;
-        }
-        
-        return FALSE;
+    if (vertShader)
+    {
+      glDeleteShader(vertShader);
+      vertShader = 0;
     }
+    if (fragShader)
+    {
+      glDeleteShader(fragShader);
+      fragShader = 0;
+    }
+    if (program)
+    {
+      glDeleteProgram(program);
+      params->_program = 0;
+    }
+    
+    return FALSE;
+  }
 	
-    // Get uniform locations
+  // Get uniform locations
 	params->_uiMatrixPalette = glGetUniformLocation(program, "uMatrixPalette");
 	params->_uiMatrixP = glGetUniformLocation(program, "uPMatrix");
 	
@@ -1227,16 +1229,16 @@ BOOL pmdRenderer::loadShaders( SHADER_PARAMS* params, NSString* strVsh, NSString
 	params->_uiMaterialSpecular = glGetUniformLocation(program, "vMaterialSpecular");
 	params->_uiSkinWeight = glGetUniformLocation(program, "fSkinWeight");
 	
-
+  
 	// Set the sampler2D uniforms to corresponding texture units
 	glUniform1i(glGetUniformLocation(program, "sTexture"), 0);
   
 	// Release vertex and fragment shaders
-    if (vertShader)
-        glDeleteShader(vertShader);
+  if (vertShader)
+    glDeleteShader(vertShader);
 	if (fragShader)
 		glDeleteShader(fragShader);
-
+  
 	params->_program = program;
 	return TRUE;
 }

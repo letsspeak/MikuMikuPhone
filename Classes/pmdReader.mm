@@ -22,67 +22,67 @@ pmdReader::~pmdReader()
 #pragma mark Init
 bool pmdReader::init( NSString* strFileName )
 {
-    NSLog(@"pmdReader::init called.");
-    NSLog(@"pmdReader::init will call dataWithContentsOfFile");
+  NSLog(@"pmdReader::init called.");
+  NSLog(@"pmdReader::init will call dataWithContentsOfFile");
 	_data = [[NSData dataWithContentsOfFile:strFileName options:NSDataReadingUncached error:nil] retain];
 	if( !_data )
-    {
-        NSLog(@"Failed to load data");
-        return FALSE;
-    }
+  {
+    NSLog(@"Failed to load data");
+    return FALSE;
+  }
 	
-    _pData = (int8_t*)[_data bytes];
-//    memcpy(&_pData, [_data bytes], [_data length]);
-    
-    if (!_pData)
-    {
-        NSLog(@"Failed to load data");
-        return FALSE;
-    }
+  _pData = (int8_t*)[_data bytes];
+  //    memcpy(&_pData, [_data bytes], [_data length]);
+  
+  if (!_pData)
+  {
+    NSLog(@"Failed to load data");
+    return FALSE;
+  }
 	_iOffset = 0;
-    
-    NSLog(@"pmdReader::init load data suceeded.");
+  
+  NSLog(@"pmdReader::init load data suceeded.");
 	
 	if( verifyHeader() == false ){
-        NSLog(@"pmdReader::init verifyHeader() == false");
+    NSLog(@"pmdReader::init verifyHeader() == false");
 		return false;
-    }
+  }
 	
 	if( !parseVertices() ){
-        NSLog(@"pmdReader::init parseVertices() == false");
+    NSLog(@"pmdReader::init parseVertices() == false");
 		return false;
-    }
-    
+  }
+  
 	if( !parseIndices() ){
-        NSLog(@"pmdReader::init parseIndices() == false");
+    NSLog(@"pmdReader::init parseIndices() == false");
 		return false;
-    }
-    
+  }
+  
 	if( !parseMaterials() ){
-        NSLog(@"pmdReader::init parseMaterials() == false");
+    NSLog(@"pmdReader::init parseMaterials() == false");
 		return false;
-    }
-    
+  }
+  
 	if( !parseBones() ){
-        NSLog(@"pmdReader::init parseBones() == false");
+    NSLog(@"pmdReader::init parseBones() == false");
 		return false;
-    }
-    
+  }
+  
 	if( !parseIKs() ){
-        NSLog(@"pmdReader::init parseIKs() == false");
+    NSLog(@"pmdReader::init parseIKs() == false");
 		return false;
-    }
-    
+  }
+  
 	if( !parseSkins() ){
-        NSLog(@"pmdReader::init parseSkins() == false");
+    NSLog(@"pmdReader::init parseSkins() == false");
 		return false;
-    }
+  }
 	
 	//Just ignore other stuff...
-    
-    NSLog(@"pmdReader::init returns true.");
+  
+  NSLog(@"pmdReader::init returns true.");
 	
-	return true;	
+	return true;
 }
 
 bool pmdReader::unload()
@@ -105,7 +105,7 @@ int16_t pmdReader::getShort()
 
 int32_t pmdReader::getInteger()
 {
-    NSLog(@"getInteger called _iOffset = %d", _iOffset);
+  NSLog(@"getInteger called _iOffset = %d", _iOffset);
 	int32_t i =  *(int32_t*)&_pData[ _iOffset ];
 	_iOffset += sizeof( int32_t );
 	return i;
@@ -113,21 +113,20 @@ int32_t pmdReader::getInteger()
 
 float pmdReader::getFloat()
 {
-    NSLog(@"pmdReader::getFloat() called.");
-    NSLog(@"_iOffset = %d", _iOffset);
-    NSLog(@"_pData = %p", _pData);
-    NSLog(@"hoge");
-    
-//	int32_t i =  *(int32_t*)&_pData[ _iOffset ];    
-//    NSLog(@"test succeeded.");
-//	float f =  *(float*)&_pData[ _iOffset ];    
-    
-    float f;
-    memcpy(&f, &_pData[ _iOffset], sizeof(float));
-    
+  NSLog(@"pmdReader::getFloat() called.");
+  NSLog(@"_iOffset = %d", _iOffset);
+  NSLog(@"_pData = %p", _pData);
+  
+  //	int32_t i =  *(int32_t*)&_pData[ _iOffset ];
+  //    NSLog(@"test succeeded.");
+  //	float f =  *(float*)&_pData[ _iOffset ];
+  
+  float f;
+  memcpy(&f, &_pData[ _iOffset], sizeof(float));
+  
 	_iOffset += sizeof( float );
-    
-    NSLog(@"pmdReader::getFloat() return.");
+  
+  NSLog(@"pmdReader::getFloat() return.");
 	return f;
 }
 
@@ -253,7 +252,7 @@ bool pmdReader::parseSkins()
 
 bool pmdReader::verifyHeader()
 {
-    NSLog(@"pmdReader::verifyHeader() called.");
+  NSLog(@"pmdReader::verifyHeader() called.");
 	const int32_t PMD_MAGIC = 'd' << 16 | 'm' << 8 | 'P';
 	const float PMD_VERSION = 1.f;
 	const int32_t PMD_MODELNAME_SIZE = 20;
@@ -261,12 +260,12 @@ bool pmdReader::verifyHeader()
 	
 	if( !_pData )
 		return false;
-
+  
 	if( getInteger() != PMD_MAGIC )
 		return false;
 	
 	_iOffset -= 1;	//Magicword == 3bytes
-
+  
 	float fVersion = getFloat();
 	if( fVersion != PMD_VERSION )
 		return false;
@@ -274,13 +273,13 @@ bool pmdReader::verifyHeader()
 	NSData* strModelName = [NSString stringWithCString:(const char*)&_pData[ _iOffset ] encoding:NSShiftJISStringEncoding];
 	NSLog( @"ModelName:%@", strModelName );
 	_iOffset += PMD_MODELNAME_SIZE;
-
+  
 	NSData* strComment = [NSString stringWithCString:(const char*)&_pData[ _iOffset] encoding:NSShiftJISStringEncoding];
 	NSLog( @"Comment:%@", strComment );
 	_iOffset += PMD_COMMENT_SIZE;
-    
-    NSLog(@"pmdReader::verifyHeader() returns true.");
+  
+  NSLog(@"pmdReader::verifyHeader() returns true.");
 	
-	return true;	
+	return true;
 }
 

@@ -90,38 +90,38 @@ inline double micro()
 
 - (bool)load:(NSString*)strModel motion:(NSString*)strMotion
 {
-    NSLog(@"ES2Renderer load called.");
+  NSLog(@"ES2Renderer load called.");
 	if( strModel == nil )
 		return false;
-
-    NSLog(@"ES2Renderer will call _pmdRenderer.unload()");
+  
+  NSLog(@"ES2Renderer will call _pmdRenderer.unload()");
 	_pmdRenderer.unload();
-    
-    NSLog(@"ES2Renderer will call _reader.init( strModel )");
+  
+  NSLog(@"ES2Renderer will call _reader.init( strModel )");
 	bool b = _reader.init( strModel );
 	if( b == false )
 		return b;
 	
 	if( strMotion == nil )
 	{
-        NSLog(@"ES2Renderer will call _pmdRenderer.init( &_reader, NULL )");
+    NSLog(@"ES2Renderer will call _pmdRenderer.init( &_reader, NULL )");
 		_pmdRenderer.init( &_reader, NULL );
 	}
 	else
 	{
-        NSLog(@"ES2Renderer will call _motionreader.init( strMotion )");
+    NSLog(@"ES2Renderer will call _motionreader.init( strMotion )");
 		_motionreader.init( strMotion );
-        NSLog(@"ES2Renderer will call _pmdRenderer.init( &_reader, &_motionreader )");        
+    NSLog(@"ES2Renderer will call _pmdRenderer.init( &_reader, &_motionreader )");
 		_pmdRenderer.init( &_reader, &_motionreader );
 	}
-    
-    NSLog(@"ES2Renderer will call _reader.unload()");
+  
+  NSLog(@"ES2Renderer will call _reader.unload()");
 	_reader.unload();
 	_motionreader.unload();
-
-    NSLog(@"ES2Renderer load returns true");
-
-    return true;
+  
+  NSLog(@"ES2Renderer load returns true");
+  
+  return true;
 }
 
 - (void)render
@@ -254,6 +254,7 @@ inline double micro()
 
 - (BOOL)loadShaders
 {
+  NSLog(@"ES2Renderer::loadShaders");
     GLuint vertShader, fragShader;
     NSString *vertShaderPathname, *fragShaderPathname;
 

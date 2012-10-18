@@ -7,8 +7,6 @@
 //
 
 #import "EAGLView.h"
-
-#import "ES1Renderer.h"
 #import "ES2Renderer.h"
 
 
@@ -22,7 +20,6 @@
 
 @synthesize animating, animationFrameInterval, displayLink, animationTimer, renderer;
 
-
 // You must implement this method
 + (Class)layerClass
 {
@@ -31,45 +28,40 @@
 
 //The EAGL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:
 - (id)initWithCoder:(NSCoder*)coder
-{    
-    self = [super initWithCoder:coder];
-    if (self)
+{
+  self = [super initWithCoder:coder];
+  if (self)
+  {
+    // Get the layer
+    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+    
+    eaglLayer.opaque = TRUE;
+    eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+    
+    renderer = [[ES2Renderer alloc] init];
+
+    if (!renderer)
     {
-        // Get the layer
-        CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
-
-        eaglLayer.opaque = TRUE;
-        eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-
-        renderer = [[ES2Renderer alloc] init];
-
-        if (!renderer)
-        {
-            renderer = [[ES1Renderer alloc] init];
-
-            if (!renderer)
-            {
-                [self release];
-                return nil;
-            }
-        }
-
-        animating = FALSE;
-        displayLinkSupported = FALSE;
-        animationFrameInterval = 1;
-        displayLink = nil;
-        animationTimer = nil;
-
-        // A system version of 3.1 or greater is required to use CADisplayLink. The NSTimer
-        // class is used as fallback when it isn't available.
-        NSString *reqSysVer = @"3.1";
-        NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-        if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
-            displayLinkSupported = TRUE;
+      [self release];
+      return nil;
     }
-
-    return self;
+    
+    animating = FALSE;
+    displayLinkSupported = FALSE;
+    animationFrameInterval = 1;
+    displayLink = nil;
+    animationTimer = nil;
+    
+    // A system version of 3.1 or greater is required to use CADisplayLink. The NSTimer
+    // class is used as fallback when it isn't available.
+    NSString *reqSysVer = @"3.1";
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
+      displayLinkSupported = TRUE;
+  }
+  
+  return self;
 }
 
 - (void)drawView:(id)sender

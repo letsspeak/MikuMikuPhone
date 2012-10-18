@@ -10,6 +10,7 @@
 #import "PickerViewController.h"
 #import "EAGLView.h"
 #import "pmdReader.h"
+#import "ES2Renderer.h"
 
 @implementation MikuMikuPhoneAppDelegate
 
@@ -204,7 +205,8 @@
 	{
 		strMotionFile = [NSString stringWithFormat:@"%@/%@", doc, _strMotionFile];
 	}
-	[glView.renderer load:strFile motion:strMotionFile];
+  
+  [glView.renderer load:strFile motion:strMotionFile];
 }
 
 - (int32_t) getSelection
