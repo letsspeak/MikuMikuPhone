@@ -12,8 +12,9 @@
 @class EAGLView;
 
 @interface MikuMikuPhoneAppDelegate : NSObject <UIApplicationDelegate, UITabBarDelegate> {
-    UIWindow *window;
-    EAGLView *glView;
+  
+  UIWindow *window;
+  EAGLView *glView;
 	IBOutlet UITabBar *_tabBar;
 	IBOutlet UIViewController* _viewCtrl;
 	PickerViewController* _pickerViewCtrl;

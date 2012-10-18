@@ -47,7 +47,7 @@
 	}
 	
 	_strModelFile = @"初音ミクVer2.pmd";
-	_strMotionFile = @"恋VOCALOID.vmd";
+	_strMotionFile = @"kpm1-miku.vmd"; //@"恋VOCALOID.vmd";
 	_iCurrentSelection[ 0 ] = -1;
 	_iCurrentSelection[ 1 ] = -1;
 	
@@ -72,82 +72,82 @@
 	[self picked:_iCurrentSelection[ _iPickerMode ]];
 	//	[glView.renderer load:strFile motion:strMotionFile];
 
-    [glView startAnimation];
+  [glView startAnimation];
 	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [glView stopAnimation];
+  [glView stopAnimation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [glView startAnimation];
+  [glView startAnimation];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    [glView stopAnimation];
+  [glView stopAnimation];
 }
 
 - (void)dealloc
 {
 	[_pickerViewCtrl release];
-    [window release];
-    [glView release];
+  [window release];
+  [glView release];
 	[_modelFiles release];
 	[_motionFiles release];
-
-    [super dealloc];
+  
+  [super dealloc];
 }
 
 #pragma mark tabBar
 - (void) showModal:(UIView*) modalView
 {
-    CGSize offSize = [UIScreen mainScreen].bounds.size;
+  CGSize offSize = [UIScreen mainScreen].bounds.size;
 	CGPoint middleCenter = CGPointMake( offSize.width / 2,
-									   offSize.height - modalView.bounds.size.height / 2 );
+                                     offSize.height - modalView.bounds.size.height / 2 );
 	
-    CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0,
-										  offSize.height + modalView.bounds.size.height / 2);
-    modalView.center = offScreenCenter;
+  CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0,
+                                        offSize.height + modalView.bounds.size.height / 2);
+  modalView.center = offScreenCenter;
 	
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5]; // animation duration in seconds
-    modalView.center = middleCenter;
-    [UIView commitAnimations];
-}	
+  [UIView beginAnimations:nil context:nil];
+  [UIView setAnimationDuration:0.5]; // animation duration in seconds
+  modalView.center = middleCenter;
+  [UIView commitAnimations];
+}
 	
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
-    if ([finished boolValue])
+  if ([finished boolValue])
 	{
-        [_pickerViewCtrl.view removeFromSuperview];
+    [_pickerViewCtrl.view removeFromSuperview];
 		[glView startAnimation];
 	}
 }
 
 - (void) hideModal:(UIView*) modalView
 {
-    CGSize offSize = [UIScreen mainScreen].bounds.size;
-    CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0,
-										  offSize.height + modalView.bounds.size.height / 2);
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5]; // animation duration in seconds
+  CGSize offSize = [UIScreen mainScreen].bounds.size;
+  CGPoint offScreenCenter = CGPointMake(offSize.width / 2.0,
+                                        offSize.height + modalView.bounds.size.height / 2);
+  [UIView beginAnimations:nil context:nil];
+  [UIView setAnimationDuration:0.5]; // animation duration in seconds
 	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 	[UIView setAnimationDelegate:self];
-
-    modalView.center = offScreenCenter;
-    [UIView commitAnimations];
-}	
+  
+  modalView.center = offScreenCenter;
+  [UIView commitAnimations];
+}
 
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
 	_iPickerMode = item.tag;
-
-    [glView stopAnimation];
+  
+  [glView stopAnimation];
 	
 	if( _pickerViewCtrl != nil )
 		[_pickerViewCtrl release];
@@ -157,7 +157,6 @@
 	[_pickerViewCtrl.view sizeToFit];
 	
 	[self showModal:_pickerViewCtrl.view];
-
 }
 
 - (NSArray*) getPickerItems
@@ -205,9 +204,7 @@
 	{
 		strMotionFile = [NSString stringWithFormat:@"%@/%@", doc, _strMotionFile];
 	}
-	[glView.renderer load:strFile
-				   motion:strMotionFile];
-
+	[glView.renderer load:strFile motion:strMotionFile];
 }
 
 - (int32_t) getSelection
