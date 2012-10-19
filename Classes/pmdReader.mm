@@ -113,17 +113,9 @@ int32_t pmdReader::getInteger()
 
 float pmdReader::getFloat()
 {
-  NSLog(@"pmdReader::getFloat() called.");
-  NSLog(@"_iOffset = %d", _iOffset);
-  NSLog(@"_pData = %p", _pData);
-  
-  //	int32_t i =  *(int32_t*)&_pData[ _iOffset ];
-  //    NSLog(@"test succeeded.");
-  //	float f =  *(float*)&_pData[ _iOffset ];
-  
-  float f;
-  memcpy(&f, &_pData[ _iOffset], sizeof(float));
-  
+
+    float f;
+    memcpy(&f, &_pData[ _iOffset ], sizeof(float));
 	_iOffset += sizeof( float );
   
   NSLog(@"pmdReader::getFloat() return.");
