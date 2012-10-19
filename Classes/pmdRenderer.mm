@@ -130,18 +130,18 @@ void pmdRenderer::render()
 	{
 		matrixPalette = _motionProvider->getMatrixPalette();
 
-		if( _bPerformSkinmeshAnimation )
-		{
-			int32_t iSkinAnimationIndex = _motionProvider->getSkinAnimationParameters( fWeight );
-			
-			if( iSkinAnimationIndex != _iCurrentSkinAnimationIndex )
-			{
-				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
-				//Update vbo
-				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
-			}
-		}
+//		if( _bPerformSkinmeshAnimation )
+//		{
+//			int32_t iSkinAnimationIndex = _motionProvider->getSkinAnimationParameters( fWeight );
+//			
+//			if( iSkinAnimationIndex != _iCurrentSkinAnimationIndex )
+//			{
+//				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
+//				//Update vbo
+//				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
+//				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
+//			}
+//		}
 	}
 	
 	std::vector< DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
