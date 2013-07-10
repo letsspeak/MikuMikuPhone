@@ -47,7 +47,7 @@
 		}
 	}
 	
-	_strModelFile = @"初音ミクVer2.pmd";
+	_strModelFile = @"AnimalCrossingNewLeaf_Isabelle.pmd";//@"初音ミクVer2.pmd";
 	_strMotionFile = @"kpm1-miku.vmd"; //@"恋VOCALOID.vmd";
 	_iCurrentSelection[ 0 ] = -1;
 	_iCurrentSelection[ 1 ] = -1;
